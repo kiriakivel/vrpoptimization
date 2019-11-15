@@ -9,7 +9,7 @@ package gr.aueb.dmst.binpackingoptimization;
  *
  * @author kyriaki
  */
-public class BinPackingMain {
+public class VRPMain {
     
     /*
       sample code
