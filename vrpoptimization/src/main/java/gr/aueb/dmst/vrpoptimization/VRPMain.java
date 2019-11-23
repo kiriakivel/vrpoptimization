@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gr.aueb.dmst.binpackingoptimization;
+package gr.aueb.dmst.vrpoptimization;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,22 +11,30 @@ import java.util.Collections;
 import java.util.Random;
 import java.util.Scanner;
 
+
 /**
  *
  * @author kyriaki
  */
 public class VRPMain {
     
-    /*
-      sample code
-    */
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        // TODO code application logic here
+        VRP vrp = new VRP(100, 50);
+        vrp.GenerateNetworkRandomly();
+        vrp.Solve();
+    }
     public void CreateAllNodesAndServicePointLists() {
     //Create the list with the service points
         servicePoints = new ArrayList();
         Random ran = new Random(1);
         for (int i = 0 ; i < 200; i++)
         {
-        Node sp = new Node();
+        Node sp = new Node() {};
         sp.x = ran.nextInt(100);
         sp.y = ran.nextInt(100);
         sp.demand = 100*(1 + ran.nextInt(5));
