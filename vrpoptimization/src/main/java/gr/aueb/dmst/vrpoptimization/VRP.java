@@ -10,7 +10,7 @@ import java.util.Random;
 
 /**
  *
- * @author mzaxa
+ * @author team7
  */
 public class VRP {
 
@@ -37,7 +37,8 @@ public class VRP {
     public void CreateAllNodesAndCustomerLists(int numberOfCustomers) {
         //Create the list with the customers
         customers = new ArrayList();
-
+        
+        
         for (int i = 0; i < numberOfCustomers; i++) {
             Node cust = new Node();
 
@@ -60,10 +61,32 @@ public class VRP {
             Node cust = customers.get(i);
             allNodes.add(cust);
         }
+        
+        
 
         for (int i = 0; i < allNodes.size(); i++) {
             Node nd = allNodes.get(i);
             nd.ID = i;
+        }
+       
+    }
+    public void CalculateDistanceMatrix() {
+
+        distanceMatrix = new double[allNodes.size()][allNodes.size()];
+        for (int i = 0; i < allNodes.size(); i++) {
+            Node from = allNodes.get(i);
+
+            for (int j = 0; j < allNodes.size(); j++) {
+                Node to = allNodes.get(j);
+
+                double Delta_x = (from.x - to.x);
+                double Delta_y = (from.y - to.y);
+                double distance = Math.sqrt((Delta_x * Delta_x) + (Delta_y * Delta_y));
+
+                distance = Math.round(distance);
+
+                distanceMatrix[i][j] = distance;
+            }
         }
     }
 

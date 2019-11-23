@@ -7,10 +7,12 @@ package gr.aueb.dmst.vrpoptimization;
 
 /**
  *
- * @author my pc
+ * @author team7
  */
 public class Vehicle {
-    int available_weight;
+    double available_weight;
+    int sum_dist;
+    
     
     
     
