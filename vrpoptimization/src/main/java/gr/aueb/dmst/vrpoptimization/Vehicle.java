@@ -7,12 +7,11 @@ package gr.aueb.dmst.vrpoptimization;
 
 /**
  *
- * @author mzaxa
+ * @author my pc
  */
-public class TwoOptMove {
-    int positionOfFirstRoute;
-    int positionOfSecondRoute;
-    int positionOfFirstNode;
-    int positionOfSecondNode;
-    double moveCost;
+public class Vehicle {
+    int available_weight;
+    
+    
+    
 }

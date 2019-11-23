@@ -7,17 +7,17 @@ package gr.aueb.dmst.vrpoptimization;
 
 /**
  *
- * @author mzaxa
+ * @author team 7
  */
 public class Node {
     
         int x;
         int y;
         int ID;
+        double servicetime;
         boolean isRouted;
-        double demand;
+        double demand;        
         
-        public Node() 
-        {
+        public Node() {
         }
 }

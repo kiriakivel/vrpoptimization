@@ -5,6 +5,9 @@
  */
 package gr.aueb.dmst.vrpoptimization;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 /**
  *
  * @author mzaxa
@@ -19,6 +22,8 @@ public class mainClass {
         // TODO code application logic here
         VRP vrp = new VRP(100, 50);
         vrp.GenerateNetworkRandomly();
-        vrp.Solve();
+        System.out.println("blue");
+       // vrp.Solve();
     }
+    
 }
