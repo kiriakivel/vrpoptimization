@@ -5,6 +5,8 @@
  */
 package gr.aueb.dmst.vrpoptimization;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author team7
@@ -12,6 +14,15 @@ package gr.aueb.dmst.vrpoptimization;
 public class Vehicle {
     double available_weight;
     int sum_dist;
+    ArrayList <Route> routes;
+        
+        public Vehicle() 
+        {
+            routes = new ArrayList();
+            available_weight = 3000;
+            sum_dist = 0;
+            
+        }
     
     
     
