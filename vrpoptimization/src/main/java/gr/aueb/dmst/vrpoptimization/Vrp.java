@@ -88,15 +88,19 @@ public class Vrp {
         }
     }
 
-    void Solve() {
+    public void Solve() {
 
         Solution s = new Solution();
 
         ApplyNearestNeighborMethod(s);
-        for(int i = 0 ; i < 1000; i++){
-        SolutionDrawer.drawRoutes(allNodes, s, Integer.toString(i));
-        }
-       // TabuSearch(s);
+
+       // for(int i = 0 ; i < 1000; i++){
+       // SolutionDrawer.drawRoutes(allNodes, s, Integer.toString(i));
+
+        //}
+       // TabucSearch(s);
+    System.out.println(CalculateCostSol(s));
+
     }
 
     private void SetRoutedFlagToFalseForAllCustomers() {
@@ -202,10 +206,12 @@ public class Vrp {
     private double CalculateCostSol(Solution sol)
     {
         double totalCost = 0;
+        int totalNodes = 0;
 
         for (int i = 0; i < sol.routes.size(); i++)
         {
             Route rt = sol.routes.get(i);
+            totalNodes += rt.nodes.size();
 
             for (int j = 0; j < rt.nodes.size() - 1; j++) {
                 Node A = rt.nodes.get(j);
@@ -216,9 +222,14 @@ public class Vrp {
                 totalCost += distanceMatrix[A.ID][B.ID];
             }
         }
-        
+
         //array list me 25 theseis, me ta lepta kathe forthgou
         //epilegw to max sto telos
+        totalCost = (totalCost/35) ;
+        totalCost += (15/60) * totalNodes ;
+
+
+        System.out.println(totalCost);
 
         return totalCost;
 
