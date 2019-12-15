@@ -210,10 +210,15 @@ public class Vrp {
             for (int j = 0; j < rt.nodes.size() - 1; j++) {
                 Node A = rt.nodes.get(j);
                 Node B = rt.nodes.get(j + 1);
+                // /35 * 60 gia metatroph se lepta
+                // + (15 * nodes.size()) gia na metraei kai to xrono ekfortwshs
 
                 totalCost += distanceMatrix[A.ID][B.ID];
             }
         }
+        
+        //array list me 25 theseis, me ta lepta kathe forthgou
+        //epilegw to max sto telos
 
         return totalCost;
 
