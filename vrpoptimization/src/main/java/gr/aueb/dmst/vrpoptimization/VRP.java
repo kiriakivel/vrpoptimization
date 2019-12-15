@@ -60,8 +60,7 @@ public class VRP {
         for (int i = 0; i < customers.size(); i++) {
             Node cust = customers.get(i);
             allNodes.add(cust);
-        }
-        
+        }    
         
 
         for (int i = 0; i < allNodes.size(); i++) {

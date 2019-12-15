@@ -7,7 +7,7 @@ package gr.aueb.dmst.vrpoptimization;
 
 /**
  *
- * @author team 7
+ * @author team7
  */
 public class Node {
     
@@ -18,6 +18,6 @@ public class Node {
         boolean isRouted;
         double demand;        
         
-        public Node() {
+        public Node() { 
         }
 }
