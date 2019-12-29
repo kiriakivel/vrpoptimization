@@ -20,7 +20,7 @@ public class mainClass {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        Vrp vrp = new Vrp(100, 50);
+        Vrp vrp = new Vrp(200, 3000);
         vrp.GenerateNetworkRandomly();
         vrp.Solve();
     }
