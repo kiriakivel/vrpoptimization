@@ -3,21 +3,24 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gr.aueb.dmst.vrpoptimization;
+
 
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author mzaxa
  */
 public class Vrp {
-
+	double BestSolutionCost;
     double[][] distanceMatrix;
     ArrayList<Node> allNodes;
     ArrayList<Node> customers;
+    Map<Integer,Double> maptest  = new HashMap<Integer,Double>();
     Random ran;
     Node depot;
     int numberOfCustomers;
@@ -44,8 +47,7 @@ public class Vrp {
 
             cust.x = ran.nextInt(100);
             cust.y = ran.nextInt(100);
-            cust.demand = 10 + ran.nextInt(20);
-
+            cust.demand = 100*(1 + ran.nextInt(5));
             customers.add(cust);
         }
 
@@ -93,21 +95,69 @@ public class Vrp {
         Solution s = new Solution();
 
         ApplyNearestNeighborMethod(s);
-
-       // for(int i = 0 ; i < 1000; i++){
-       // SolutionDrawer.drawRoutes(allNodes, s, Integer.toString(i));
-
-        //}
-       // TabucSearch(s);
+     CalculateLatestRoute(s);
     System.out.println(CalculateCostSol(s));
+    System.out.println(s.routes.size());
+
+    //   for(int i = 0 ; i < 30; i++){
+     //   SolutionDrawer.drawRoutes(allNodes, s, Integer.toString(i));
+
+      //  }
+       // TabucSearch(s);
+
 
     }
+
+
+
+
+
+    private void CalculateLatestRoute(Solution s)
+    {
+		int totalNodes = 0;
+		double highdis = 0;
+		int whereishigh = 0;
+		for (int i = 0 ; i < s.routes.size(); i++)
+		{
+			   Route rt = s.routes.get(i);
+			   double totalCost = 0;
+			   double distance = 0;
+			   totalNodes = rt.nodes.size();
+			   for(int j = 0 ; j < rt.nodes.size()-1; j++)
+			   {
+			    Node A = rt.nodes.get(j);
+		        Node B = rt.nodes.get(j + 1);
+                totalCost += distanceMatrix[A.ID][B.ID];
+			   }
+			    totalCost = (totalCost/35) ;
+                totalCost += (15/60) * totalNodes;
+		        distance = totalCost;
+			    maptest.put(i,distance);
+			    if (highdis < distance)
+			      {
+			          highdis = distance;
+			        	whereishigh = i;
+				}
+		   }
+		double check = 0;
+		   for (Map.Entry<Integer,Double> entry : maptest.entrySet()){
+		               System.out.println("Key = " + entry.getKey() +      ", Value = " + entry.getValue());
+		               check+= entry.getValue();
+				}
+				System.out.println("Longest distance route is gonna be route with ID " + whereishigh + " with estimated time : " + highdis);
+	}
 
     private void SetRoutedFlagToFalseForAllCustomers() {
         for (int i = 0; i < customers.size(); i++) {
             customers.get(i).isRouted = false;
         }
     }
+
+
+
+
+
+
 
     private void ApplyNearestNeighborMethod(Solution solution) {
 
@@ -137,15 +187,26 @@ public class Vrp {
                     modelIsFeasible = false;
                     break;
                 } else {
+					if(routeList.size() < 25){
                     CreateAndPushAnEmptyRouteInTheSolution(solution);
+				}
+				else{
+					System.out.println("Truck limit has been reached");
+					modelIsFeasible = false;
+					break;
+				}
                 }
             }
         }
 
         if (modelIsFeasible == false) {
-            //TODO
-        }
+			System.out.println("The demand is larger than capacity,the model cannot be feasible");
+		}
+
     }
+
+
+
 
     private Route GetLastRoute(ArrayList<Route> routeList) {
         if (routeList.isEmpty()) {
@@ -237,3 +298,4 @@ public class Vrp {
 
 
 }
+
