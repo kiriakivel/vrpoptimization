@@ -22,7 +22,9 @@ public class mainClass {
          // TODO code application logic here
          Vrp vrp = new Vrp(200, 3000);
          vrp.GenerateNetworkRandomly();
+         //Greedy solution
          vrp.Solve();
+         //Solution with Relocation Move Local Search type
          vrp.operateLocalSearch(vrp.Solve());
      }
 
