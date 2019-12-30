@@ -1,14 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package gr.aueb.dmst.vrpoptimization;
-
-/**
- *
- * @author imakrigiannis
- */
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -121,8 +110,12 @@ public class SolutionDrawer {
                 g.drawString(id, ii + 8 * marginNode, jj + 8 * marginNode);
             }
         }
+          double drawcost = s.cost;
+		  drawcost = s.routes.get(Vrp.whereishigh).cost;
+		  drawcost = (drawcost/35);
+		  drawcost+= (15/60)* allNodes.size();
 
-        String cst = "Cost: " + s.cost;
+        String cst = "Time of highest route: " + drawcost;
         g.drawString(cst, 10, 10);
 
         fileName = fileName + ".png";
@@ -137,4 +130,5 @@ public class SolutionDrawer {
     }
 
 }
+
     
