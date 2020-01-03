@@ -24,8 +24,6 @@ public class mainClass {
          vrp.GenerateNetworkRandomly();
          //Greedy solution
          vrp.Solve();
-         //Relocation Move Local Search solution
-         vrp.operateLocalSearch(vrp.Solve());
      }
 
 }
