@@ -17,7 +17,9 @@ public class Vrp {
     Node depot;
     int numberOfCustomers;
     int capacity;
-
+	Solution bestSolution;
+	Solution s = new Solution();
+ MyRandomGenerator rans;
 
     public Vrp(int totalCustomers, int cap) {
         numberOfCustomers = totalCustomers;
@@ -79,7 +81,7 @@ public class Vrp {
 
     public void Solve() {
 		System.out.println(" **** Setting nodes and routes ****");
-	    Solution s = new Solution();
+
 	    ApplyNearestNeighborMethod(s);
 	 	highdistance = CalculateLatestRoute(s);
 	    System.out.println("Longest route is gonna be route with ID " + whereishigh + " with time " +highdistance+" hours.");
@@ -100,24 +102,12 @@ public class Vrp {
 			dis = dis +1;
 			if (rm.moveCost < 0){
 				applyRelocationMove(rm, s, distanceMatrix);
-				SolutionDrawer.drawRoutes(allNodes, s, "relocationmove" + Integer.toString(dis));
+			//	SolutionDrawer.drawRoutes(allNodes, s, "relocationmove" + Integer.toString(dis));
 			} else {
 				terminationCondition = true;
 			}
 		}
-		//for (int j = 0; j<21; j++)
-		//	{
-		//		int vehicle = j+1;
-		//	System.out.print("New Assignment to Vehicle " + vehicle + ": ");
-		//	for (int k=0; k<s.routes.get(j).nodes.size(); k++)
-		//	{
-		//		System.out.print(s.routes.get(j).nodes.get(k).ID + "  ");
-		//	}
-		//	System.out.println("");
-		//	System.out.println("Route Cost: " + s.routes.get(j).cost  + " - Route Load: " + s.routes.get(j).load);
-			//System.out.println(" ");
 
-		//}
 		if(highdistance > getCostHighest(s)) {
 			System.out.println("The highest route with ID " +whereishigh + " has been now : "+ getCostHighest(s)+" hours.");
 			highdistance = getCostHighest(s);
@@ -139,7 +129,7 @@ public class Vrp {
 					if(topm.moveCost < 0)
 					{
 						ApplyTwoOptMove(topm,s);
-					    SolutionDrawer.drawRoutes(allNodes, s, "twooptmove" + Integer.toString(twos));
+					  //  SolutionDrawer.drawRoutes(allNodes, s, "twooptmove" + Integer.toString(twos));
 					} else {
 						twoterminal = true;
 					}
@@ -164,7 +154,7 @@ public class Vrp {
 				    swap+=1;
 				    if (sm.moveCost < 0) {
 						ApplySwapMove(sm, s);
-						SolutionDrawer.drawRoutes(allNodes, s, "swapmove" + Integer.toString(swap));
+					//	SolutionDrawer.drawRoutes(allNodes, s, "swapmove" + Integer.toString(swap));
 					} else {
 						terminal = true;
 					}
@@ -179,6 +169,10 @@ public class Vrp {
 		}
 
 		System.out.println("Total time to finish all routes : " + CalculateCostSol(s) +" hours.");
+		System.out.println("Total time to finish all routes : " + CalculateCostSol2(s));
+		rans = new MyRandomGenerator(s.routes.size());
+		SimulatedAnnealing();
+		System.out.println("Total time to finish all routes : " + CalculateCostSol2(s));
 	}
 
 
@@ -759,5 +753,147 @@ public class Vrp {
 	    totalCost += (15/60) * totalNodes ;
 	    return totalCost;
 	}
+	private double CalculateCostSol2(Solution sol) {
+	    double totalCost = 0;
+	    int totalNodes = 0;
+	    for (int i = 0; i < sol.routes.size(); i++) {
+	        Route rt = sol.routes.get(i);
+	        totalNodes += rt.nodes.size();
+	        for (int j = 0; j < rt.nodes.size() - 1; j++) {
+	            Node A = rt.nodes.get(j);
+	            Node B = rt.nodes.get(j + 1);
+	            totalCost += distanceMatrix[A.ID][B.ID];
+	        }
+	    }
+
+	    return totalCost;
+	}
+
+
+ private void SimulatedAnnealing()
+    {
+        bestSolution = CloneSolution(s);
+//        ReportSolution(sol);
+
+      int maxOuterIterations = 2;
+        int maxInnerIterations = 5;
+		Solution tentSolution;
+
+        double ratioTemp = 0.5;
+        double initTemperature = 90;
+
+        double temperature = initTemperature;
+
+        for (int k = 0; k < maxOuterIterations; k++)
+        {
+            for (int j = 0 ; j < maxInnerIterations; j++)
+            {
+
+                tentSolution = CreateRandomNeighborWithSwapMove();
+              //  ReportSolution(tentSolution);
+
+                if (MoveIsAccepted(tentSolution.cost, s.cost, temperature ))
+                {
+                    s = tentSolution;
+                }
+
+                if (s.cost < bestSolution.cost)
+                {
+                    bestSolution = CloneSolution(s);
+                }
+            }
+
+            temperature = ratioTemp * temperature;
+        }
+
+    }
+
+    private Solution CloneSolution(Solution sol) {
+        Solution cloned = new Solution();
+
+        //No need to clone - basic type
+        cloned.cost = sol.cost;
+
+        //Need to clone: Arraylists are objects
+        for (int i = 0; i < sol.routes.size(); i++) {
+            Route rt = sol.routes.get(i);
+            Route clonedRoute = cloneRoute(rt);
+            cloned.routes.add(clonedRoute);
+        }
+
+        return cloned;
+    }
+
+    private void ReportSolution()
+    {
+        System.out.print(" -- Cost:" + s.cost + "----");
+        for (int i = 0 ; i < s.routes.size(); i++)
+        {
+            int pos = i+1;
+            int wID = s.routes.get(i).nodes.get(i).ID;
+            System.out.print(wID + ",");
+        }
+        System.out.println();
+    }
+
+    private Solution CreateRandomNeighborWithSwapMove()
+    {
+        int positionOfFirst;
+        positionOfFirst = rans.positionForFirstSwapped();
+        int positionOfSecond = rans.positionForSecondSwapped(positionOfFirst);
+
+        Solution newSol = new Solution();
+        newSol.routes.addAll(s.routes);
+
+        Node first = s.routes.get(positionOfFirst).nodes.get(positionOfFirst);
+        Node second = s.routes.get(positionOfSecond).nodes.get(positionOfSecond); // tsekare ta
+
+        newSol.routes.get(positionOfFirst).nodes.set(positionOfFirst, second);
+        newSol.routes.get(positionOfSecond).nodes.set(positionOfSecond, first);
+
+        newSol.cost = CalculateCostSol2(newSol);
+
+        return newSol;
+    }
+
+    private boolean MoveIsAccepted(double newCost, double oldCost, double temperature)
+    {
+        //for the newCost < oldCost
+        if (newCost < oldCost)
+        {
+            return true;
+        }
+
+        if (newCost >= oldCost)
+        {
+            double power = -((newCost - oldCost)/temperature);
+            double probThreshold = Math.exp(power);
+
+            double p = rans.probabilityForMoveAcceptance();
+
+            if (p <= probThreshold)
+            {
+                return true;
+            }
+        }
+
+        return false;
+
+
+    }
+
+    private Route cloneRoute(Route rt) {
+        Route cloned = new Route(rt.capacity);
+        cloned.cost = rt.cost;
+        cloned.load = rt.load;
+        cloned.nodes = new ArrayList();
+        for (int i = 0; i < rt.nodes.size(); i++) {
+            Node n = rt.nodes.get(i);
+            cloned.nodes.add(n);
+            //cloned.nodes.add(rt.nodes.get(i));
+        }
+        //cloned.nodes = rt.nodes.clone();
+        return cloned;
+    }
 
 }
