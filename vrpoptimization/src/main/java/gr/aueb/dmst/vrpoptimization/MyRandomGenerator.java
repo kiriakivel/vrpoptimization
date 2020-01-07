@@ -1,3 +1,5 @@
+package gr.aueb.dmst.vrpoptimization;
+
 import java.util.ArrayList;
 
 /**
@@ -64,7 +66,8 @@ public class MyRandomGenerator {
         double result = randomNumber / denominator - epsilon;
 
         int finalResult = (int) result;
-
+        
+        //System.out.print(finalResult + "random"+ firstSwapOptions);
         return finalResult;
     }
 
