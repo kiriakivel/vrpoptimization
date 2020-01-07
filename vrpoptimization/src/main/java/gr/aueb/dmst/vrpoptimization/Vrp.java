@@ -159,9 +159,8 @@ public class Vrp {
         }
         System.out.println("Total time to finish all routes : " + CalculateCostSol(s) +" hours.");
 	System.out.println("Total time to finish all routes : " + CalculateCostSol2(s));
-	rans = new MyRandomGenerator(s.routes.size());
-	//SimulatedAnnealing();
-	System.out.println("Total time to finish all routes : " + CalculateCostSol2(s));
+	
+	
     }
     public double getCostHighest(Solution s){
 	double highone = (s.routes.get(whereishigh).cost);
